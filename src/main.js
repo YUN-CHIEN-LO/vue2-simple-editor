@@ -5,6 +5,10 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 
+import CKEditor from "@ckeditor/ckeditor5-vue2";
+
+Vue.use(CKEditor);
+
 new Vue({
   router,
   store,
