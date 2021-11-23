@@ -127,42 +127,6 @@ export default {
     ::v-deep[dir="ltr"] .table th {
       text-align: left;
     }
-    /* ckeditor5-page-break/theme/pagebreak.css */
-    ::v-deep .page-break {
-      position: relative;
-      clear: both;
-      padding: 5px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* ckeditor5-page-break/theme/pagebreak.css */
-    ::v-deep .page-break::after {
-      content: "";
-      position: absolute;
-      border-bottom: 2px dashed hsl(0, 0%, 77%);
-      width: 100%;
-    }
-    /* ckeditor5-page-break/theme/pagebreak.css */
-    ::v-deep .page-break__label {
-      position: relative;
-      z-index: 1;
-      padding: 0.3em 0.6em;
-      display: block;
-      text-transform: uppercase;
-      border: 1px solid hsl(0, 0%, 77%);
-      border-radius: 2px;
-      font-family: Helvetica, Arial, Tahoma, Verdana, Sans-Serif;
-      font-size: 0.75em;
-      font-weight: bold;
-      color: hsl(0, 0%, 20%);
-      background: hsl(0, 0%, 100%);
-      box-shadow: 2px 2px 1px hsla(0, 0%, 0%, 0.15);
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
     /* ckeditor5-media-embed/theme/mediaembed.css */
     ::v-deep .media {
       clear: both;

@@ -13,11 +13,12 @@ const routes = [
   {
     path: "/ck-editor",
     name: "CkEditor",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/CkEditor.vue"),
+    component: () => import("../views/CkEditor.vue"),
+  },
+  {
+    path: "/tiny-mce",
+    name: "TinyMce",
+    component: () => import("../views/TinyMce.vue"),
   },
 ];
 

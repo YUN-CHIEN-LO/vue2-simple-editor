@@ -33,6 +33,7 @@
     "@ckeditor/ckeditor5-theme-lark": "^31.0.0",
     "@ckeditor/ckeditor5-typing": "^31.0.0",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
+    "@tinymce/tinymce-vue": "^3.2.8",
     "core-js": "^3.6.5",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
