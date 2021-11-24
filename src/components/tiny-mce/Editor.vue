@@ -19,26 +19,36 @@
            bullist numlist outdent indent | removeformat | help',
         templates: [
           {
-            title: '2 Column',
-            description: 'A template of 2 column',
-            content: `<div style='width: 100%'>
-                        <div style='
-                            display: inline-block;
-                            box-sizing: border-box;
-                            word-wrap: break-word;
-                            vertical-align: top;
-                            width: 49%;
-                            padding-right: 10px;
-                        '>a</div>
-                        <div style='
-                            display: inline-block;
-                            box-sizing: border-box;
-                            word-wrap: break-word;
-                            vertical-align: top;
-                            width: 49%;
-                            padding-left: 10px;
-                        '>b</div>
-                    </div>`,
+            title: 'Column',
+            description: 'A template of column',
+            content: `<div class='mceTmpl'>
+                        <p></p>
+                        <div>
+                          <div style='display: inline-block; vertical-align: top; width: 49%; padding-right: 10px; box-sizing: border-box'>
+                            <p></p>
+                          </div>
+                          <div style='display: inline-block; vertical-align: top; width: 49%; padding-left: 10px; box-sizing: border-box'>
+                            <p></p>
+                          </div>
+                        </div>
+                        <p></p>
+                      </div>`,
+          },
+          {
+            title: 'Table',
+            description: 'A template of table',
+            content: `<div class='mceTmpl'>
+                        <table width='98%' border='0' cellspacing='0' cellpadding='0'>
+                          <tr>
+                            <th scope='col'> </th>
+                            <th scope='col'> </th>
+                          </tr>
+                          <tr>
+                            <td> </td>
+                            <td> </td>
+                          </tr>
+                        </table>
+                      </div>`,
           },
         ],
         content_css: 'template',
