@@ -1,86 +1,112 @@
 <template>
-  <div class="home" ref="container" v-stream:mousemove="mouseMove$">
+  <div class="home" @mousemove="move">
     <div class="home__block home--block1">
-      <div class="box">
+      <div class="box box--blue">
         <div
+          @mousedown="captureOn('blue')"
+          @mouseup="captureOff"
+          :style="dragTarget === 'blue' ? moveStyle : {}"
+          ref="blue"
           class="box__shadow box--blue"
-          v-stream:mouseup="mouseUp$"
-          v-stream:mousedown="mouseDown$"
-          ref="box"
-          :style="styles"
-        ></div>
+        >
+          <div class="box__item box--blue">Blue</div>
+        </div>
       </div>
-      <div class="box">
-        <div class="box__shadow box--red"></div>
+      <div class="box box--red">
+        <div
+          @mousedown="captureOn('red')"
+          @mouseup="captureOff"
+          :style="dragTarget === 'red' ? moveStyle : {}"
+          ref="red"
+          class="box__shadow box--red"
+        >
+          <div class="box__item box--red">Red</div>
+        </div>
+      </div>
+      <div class="box box--yellow">
+        <div
+          @mousedown="captureOn('yellow')"
+          @mouseup="captureOff"
+          :style="dragTarget === 'yellow' ? moveStyle : {}"
+          ref="yellow"
+          class="box__shadow box--yellow"
+        >
+          <div class="box__item box--yellow">Yellow</div>
+        </div>
       </div>
     </div>
 
-    <div class="home__block home--block2"></div>
+    <div class="home__block home--block2">
+      <div class="canvas" ref="canvas"></div>
+      <div v-show="canInsert" class="canvas__point"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import { takeUntil, concatMap, withLatestFrom } from "rxjs/operators";
 export default {
   name: "Home",
-  domStreams: ["mouseDown$", "mouseUp$", "mouseMove$"],
-  subscriptions() {
-    let _ = this;
+  data() {
     return {
-      pos: _.mouseDown$.pipe(
-        concatMap(() => _.mouseMove$.pipe(takeUntil(_.mouseUp$))),
-        withLatestFrom(_.mouseDown$, (move, down) => {
-          const mouseX = move.event.clientX;
-          const mouseY = move.event.clientY;
-          const offsetX = down.event.offsetX;
-          const offsetY = down.event.offsetY;
-          const containerW = _.$refs.container.clientWidth;
-          const containerH = _.$refs.container.clientHeight;
-          const containerX = _.$refs.container.getBoundingClientRect().left;
-          const containerY = _.$refs.container.getBoundingClientRect().top;
-          const boxW = _.$refs.box.clientWidth;
-          const boxH = _.$refs.box.clientHeight;
-          return {
-            x: _.validValue(
-              mouseX - offsetX - containerX,
-              containerW - boxW,
-              0
-            ),
-            y: _.validValue(
-              mouseY - offsetY - containerY,
-              containerH - boxH,
-              0
-            ),
-          };
-        })
-      ),
+      isDragged: false,
+      pos: {
+        x: 0,
+        y: 0,
+      },
+      dragTarget: "",
+      canInsert: false,
     };
   },
   computed: {
-    styles() {
-      let ret = {};
-      if (!this.pos)
-        return {
-          top: 0,
-          left: 0,
-        };
-      ret.position = "fixed";
-      ret.top = this.pos["y"] ? this.pos["y"] + "px" : "0px";
-      ret.left = this.pos["x"] ? this.pos["x"] + "px" : "0px";
-      return ret;
+    moveStyle() {
+      if (!this.isDragged) return {};
+      return {
+        position: "fixed",
+        top: `${this.pos.y}px`,
+        left: `${this.pos.x}px`,
+        opacity: 0.5,
+        zIndex: 1000,
+      };
     },
   },
   methods: {
-    /**
-     * 判斷方塊位置
-     *
-     * @param {number} value - 原始值
-     * @param {number} max - 最大邊際
-     * @param {number} min - 最小邊際
-     * @returns {number} - 方塊位置
-     */
-    validValue(value, max, min) {
-      return Math.min(Math.max(value, min), max);
+    captureOn(ref) {
+      this.isDragged = true;
+      this.dragTarget = ref;
+      this.pos.x = this.$refs[this.dragTarget].getBoundingClientRect().left;
+      this.pos.y = this.$refs[this.dragTarget].getBoundingClientRect().top;
+    },
+    captureOff() {
+      this.isDragged = false;
+      this.pos.x = 0;
+      this.pos.y = 0;
+      if (this.canInsert) {
+        this.insertDOM(this.dragTarget);
+      }
+      this.canInsert = false;
+    },
+    move(evt) {
+      if (this.isDragged) {
+        this.pos.x =
+          evt.screenX - this.$refs[this.dragTarget].clientWidth * 0.5;
+        this.pos.y =
+          evt.screenY - this.$refs[this.dragTarget].clientHeight * 1.5;
+
+        const canvasPosX = this.$refs.canvas.getBoundingClientRect().left;
+        const canvasPosY = this.$refs.canvas.getBoundingClientRect().top;
+
+        if (this.pos.x > canvasPosX && this.pos.y > canvasPosY) {
+          this.canInsert = true;
+        } else {
+          this.canInsert = false;
+        }
+      }
+    },
+    insertDOM(target) {
+      const template = this.$refs[target].cloneNode(true);
+      const dom = document.createElement("div");
+      dom.innerHTML = template.innerHTML;
+      this.$refs.canvas.appendChild(dom);
     },
   },
 };
@@ -105,23 +131,37 @@ export default {
     flex: 3;
   }
 }
+.canvas {
+  width: 100%;
+  &__point {
+    width: 100%;
+    height: 10px;
+    background: #ccc;
+  }
+}
 .box {
   width: 100px;
   height: 100px;
   background-color: #fff;
   margin: 10px 0px;
   position: relative;
-  &__shadow {
-    width: 100px;
-    height: 100px;
-    opacity: 0.5;
-    position: absolute;
-  }
   &--blue {
     background-color: #aaf;
   }
   &--red {
     background-color: #faa;
+  }
+  &--yellow {
+    background-color: #ffa;
+  }
+  &__shadow {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+  &__item {
+    width: 100%;
+    height: 100px;
   }
 }
 </style>
