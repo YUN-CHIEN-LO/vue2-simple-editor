@@ -37,8 +37,10 @@
     "core-js": "^3.6.5",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
-    "vue": "^2.6.11",
+    "rxjs": "^6.6.7",
+    "vue": "^2.6.14",
     "vue-router": "^3.2.0",
+    "vue-rx": "^6.2.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
